@@ -1,0 +1,17 @@
+extends layout
+
+block content
+    div.m-5
+        h1 #{title}
+        form(method='POST', action='/books/add')
+            .form-group
+                label Sarlavha:
+                input.form-control(name='title', type='text')
+            .form-group
+                label Yozuvchi:
+                input.form-control(name='author', type='text')
+            .form-group
+                label Qisqa Malumot:
+                textarea.form-control(name='body')
+                br
+            input.btn.btn-success(type='submit' value='Qo\'shish')

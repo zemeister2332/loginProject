@@ -1,0 +1,14 @@
+extends layout
+
+block content
+    div.m-5
+        h1 Tizimga Kirish
+        form(method='POST', action='/login')
+            .form-group
+                label Ism:
+                input.form-control(name='name', type='text')
+            .form-group
+                label Parol:
+                input.form-control(name='password', type='password')
+            br
+            input.btn.btn-success(type='submit' value='Kirish')

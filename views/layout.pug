@@ -1,0 +1,43 @@
+doctype
+html
+    head
+        title Bosh Sahifa
+        link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.css')
+        link(rel='stylesheet', href='/css/style.css')
+    body
+        nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.mb-5
+            a.navbar-brand(href='/') Login Tizim
+            button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbar1', aria-controls='navbar1', aria-expanded='false', aria-label='Toggle navigation')
+                span.navbar-toggler-icon
+            #navbar1.collapse.navbar-collapse
+                ul.navbar-nav.mr-auto.mt-2.mt-lg-0
+                    li.nav-item
+                        a.nav-link(href='/')
+                            | Bosh Sahifa
+                            span.sr-only (current)
+                    li.nav-item
+                        a.nav-link(href='/books/add') Kitob Qo'shish
+                form.form-inline.my-2.my-lg-0
+                    input.form-control.mr-sm-2(type='search', placeholder='Qidirish')
+                    button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Qidiruv
+                ul.navbar-nav.navbar-right
+                    li
+                        a.nav-link(href='/register') Ro'yhatdan O'tish
+                    li
+                        a.nav-link(href='/login') Tizimga Kirish
+        .container
+            != messages('message', locals)
+            if errors
+                each error, i in errors
+                    div(class="alert alert-danger") #{error.msg}
+            block content
+            br
+            hr
+            footer
+                p.ml-5 Xizmatlar Litsenziayalangan &copy; 2020
+
+            script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js', integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo', crossorigin='anonymous')
+            script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js', integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1', crossorigin='anonymous')
+            script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js', integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM', crossorigin='anonymous')
+            script(src="/js/index.js")
+            script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js")
