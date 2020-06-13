@@ -3,8 +3,10 @@ extends layout
 block content
     div.m-5
         h1= book.title
-        h4 Yozuvchi #{ book.author }
+        h4 Yozuvchi #{ author }
         p= book.body
         hr
-        a.btn.btn-warning.mr-1(href='/book/edit/' + book._id) O'zgartirish
-        a.btn.btn-danger.delete-book(href='#' data-id=book._id) O'chirish
+        if user
+            if user.id ===book.author
+                a.btn.btn-warning.mr-1(href='/book/edit/' + book._id) O'zgartirish
+                a.btn.btn-danger.delete-book(href='#' data-id=book._id) O'chirish

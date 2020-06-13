@@ -5,19 +5,32 @@ const router = express.Router();
 
 // Book Model chaqirildi
 const Book = require('../model/Book');
+// User Model chaqirildi
+const User = require('../model/User');
+
+// EnsureAuthenticated function
+const eA = (req,res,next) => {
+    if (req.isAuthenticated()){
+        next();
+    }else{
+        req.flash('danger', 'Siz Royhatdan Otmagansiz !!!!');
+        res.redirect('/login');
+    }
+};
 
 // Book Qoshish routi Get
-router.get('/books/add', (req,res) => {
+router.get('/books/add', eA, (req,res) => {
     res.render('add_book', {
         title: 'Kitob Qo\'shish'
     });
 });
 
+
 // Yangi Book Qoshish Post
 
-router.post('/books/add',(req,res)=>{
+router.post('/books/add', eA ,(req,res)=>{
     req.checkBody('title', 'Sarlavha Kerakli Qism !!!').notEmpty();
-    req.checkBody('author', 'Yozuvchi Qismi Kerakli !!!').notEmpty();
+    //req.checkBody('author', 'Yozuvchi Qismi Kerakli !!!').notEmpty();
     req.checkBody('body', 'Body Kerakli Qism !!!').notEmpty();
 
     // errorla
@@ -31,7 +44,7 @@ router.post('/books/add',(req,res)=>{
     }else{
         const book = new Book();
         book.title = req.body.title;
-        book.author = req.body.author;
+        book.author = req.user._id;
         book.body = req.body.body;
 
         book.save((err)=>{
@@ -47,17 +60,25 @@ router.post('/books/add',(req,res)=>{
 
 });
 // Book sahifa routi
-router.get('/book/:id', (req,res) => {
+router.get('/book/:id', eA , (req,res) => {
     Book.findById(req.params.id, (err, book) => {
-        res.render('book', {
-            book: book
+        User.findById(book.author, (err, user) => {
+            res.render('book', {
+                book: book,
+                author: user.name
+            });
         });
     });
 });
 
 // Bosh ozgartirish Get
-router.get('/book/edit/:id', (req,res) => {
+router.get('/book/edit/:id', eA , (req,res) => {
     Book.findById(req.params.id, (err, book) => {
+        if (book.author !== req.user._id){
+            req.flash('danger', 'Ochirib tashlash uchun huquqingiz yoq');
+            res.redirect('/');
+        }
+
         res.render('book_edit', {
             title: 'Kitobni O\'zgartirish',
             book: book
@@ -66,7 +87,7 @@ router.get('/book/edit/:id', (req,res) => {
 });
 
 // Book ozgartrsh
-router.post('/book/edit/:id', (req,res) => {
+router.post('/book/edit/:id', eA , (req,res) => {
     let book = {};
     book.title = req.body.title;
     book.author = req.body.author;
@@ -86,15 +107,28 @@ router.post('/book/edit/:id', (req,res) => {
 
 // Book ochirish
 
-router.delete('/book/:id', (req,res) => {
-    let query = {_id: req.params.id};
+router.delete('/book/:id', eA , (req,res) => {
 
-    Book.deleteOne(query, (err) => {
-        if (err)
-            console.log(err)
+    if (!req.user._id)
+        res.status(500).send();
 
-        res.send('Success');
+
+    let query = {_id:req.params.id};
+
+
+    Book.findById(req.params.id, (err, book) => {
+        if (book.author != req.user._id)
+            res.status(500).send();
+        else{
+            Book.deleteOne(query, (err) => {
+                if (err)
+                    console.log(err)
+
+                res.send('Success');
+            });
+        }
     });
+
 
 });
 

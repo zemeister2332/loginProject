@@ -1,5 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
+
 
 const router = express.Router();
 
@@ -11,10 +13,10 @@ router.get('/register', (req,res) => {
 // POST FOR REGISTER
 router.post('/register', (req,res) => {
     const name = req.body.name;
-    const email = req.body.name;
-    const username = req.body.name;
-    const password = req.body.name;
-    const password2 = req.body.name;
+    const email = req.body.email;
+    const username = req.body.username;
+    const password = req.body.password;
+    const password2 = req.body.password2;
 
     req.checkBody('name', 'Ism Majburiy Qism').notEmpty();
     req.checkBody('email', 'Email Majburiy Qism').notEmpty();
@@ -42,7 +44,6 @@ router.post('/register', (req,res) => {
                     console.log(err)
 
                 newUser.password = hash;
-
                 newUser.save((err) => {
                    if (err)
                        console.log(err)
@@ -62,4 +63,20 @@ router.post('/register', (req,res) => {
 router.get('/login', (req,res) => {
     res.render('login');
 });
+// POST LOGIN PAGE
+router.post('/login', (req,res,next) => {
+    passport.authenticate('local', {
+        successRedirect: '/',
+        failureRedirect: '/login',
+        failureFlash: true
+    })(req, res, next);
+});
+
+// GET LOGOUT PAGE
+router.get('/logout', (req,res) => {
+    req.logout();
+    req.flash('success', 'Tizimdan Muvaffaqiyatli Chiqdingiz...')
+    res.redirect('/login');
+});
+
 module.exports  = router;

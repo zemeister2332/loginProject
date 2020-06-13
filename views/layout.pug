@@ -15,16 +15,21 @@ html
                         a.nav-link(href='/')
                             | Bosh Sahifa
                             span.sr-only (current)
-                    li.nav-item
-                        a.nav-link(href='/books/add') Kitob Qo'shish
+                    if user
+                        li.nav-item
+                            a.nav-link(href='/books/add') Kitob Qo'shish
                 form.form-inline.my-2.my-lg-0
                     input.form-control.mr-sm-2(type='search', placeholder='Qidirish')
                     button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Qidiruv
                 ul.navbar-nav.navbar-right
-                    li
-                        a.nav-link(href='/register') Ro'yhatdan O'tish
-                    li
-                        a.nav-link(href='/login') Tizimga Kirish
+                    if user
+                        li
+                            a.nav-link(href='/logout') Tizimdan Chiqish
+                    else
+                        li
+                            a.nav-link(href='/register') Ro'yhatdan O'tish
+                        li
+                            a.nav-link(href='/login') Tizimga Kirish
         .container
             != messages('message', locals)
             if errors
